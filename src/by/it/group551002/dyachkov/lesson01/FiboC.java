@@ -24,7 +24,34 @@ public class FiboC {
     long fasterC(long n, int m) {
         //Интуитивно найти решение не всегда просто и
         //возможно потребуется дополнительный поиск информации
-        return -1L;
+        if (n < 2) return n % m;
+        long[][] tMatrix = {{1, 1}, {1, 0}};
+        long[][] fibMatrix = powMatrix(tMatrix, n - 1, m);
+        return fibMatrix[0][0];
+    }
+
+    long[][] mulMatrix(long[][] arrA, long[][] arrB, int m) {
+        long[][] arrC = {{0, 0}, {0, 0}};
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                for (int k = 0; k < 2; k++) {
+                    long res = (arrA[i][k] % m) * (arrB[k][j] % m);
+                    arrC[i][j] = (arrC[i][j] + res) % m;
+                }
+            }
+        }
+        return arrC;
+    }
+
+    long[][] powMatrix(long[][] arrA, long n, int m) {
+        long[][] arrRes = {{1, 0}, {0, 1}};
+        while (n > 0) {
+            if (n % 2 == 1)
+                arrRes = mulMatrix(arrRes, arrA, m);
+            arrA = mulMatrix(arrA, arrA, m);
+            n /= 2;
+        }
+        return arrRes;
     }
 
 
